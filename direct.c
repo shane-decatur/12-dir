@@ -17,8 +17,9 @@ int main(){
   printf("Directories:\n");
   while (entry){
     if (entry->d_type == DT_DIR){
-      // stat(entry->d_name, info);
-      // total += info->st_size;
+      info = malloc(sizeof(struct stat));
+      stat(entry->d_name, info);
+      total += info->st_size;
       printf("\t%s\n",entry->d_name);
     }
     entry = readdir(d);
@@ -30,8 +31,9 @@ int main(){
   entry = readdir(d);
   while (entry){
     if (entry->d_type == DT_REG){
-      // stat(entry->d_name, info);
-      // total += info->st_size;
+      info = malloc(sizeof(struct stat));
+      stat(entry->d_name, info);
+      total += info->st_size;
       printf("\t%s\n",entry->d_name);
     }
     entry = readdir(d);
@@ -43,11 +45,14 @@ int main(){
   entry = readdir(d);
   while (entry){
     if (entry->d_type != DT_DIR && entry->d_type != DT_REG){
-      // stat(entry->d_name, info);
-      // total += info->st_size;
+      info = malloc(sizeof(struct stat));
+      stat(entry->d_name, info);
+      total += info->st_size;
       printf("\t%s\n",entry->d_name);
     }
     entry = readdir(d);
   }
   closedir(d);
+
+  printf("Total Directory Size: %d bytes\n",total);
 }
