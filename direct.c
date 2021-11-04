@@ -4,14 +4,29 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <string.h>
 
-int main(){
+int main(int argc, char *argv[]){
   DIR * d;
-  d = opendir("./");
   struct dirent *entry;
   struct stat *info;
   int total = 0;
 
+  char dir[100];
+  if (argc > 1){
+    if (!opendir(dir)){
+        printf("please enter a proper directory\n");
+        printf("error %d: %s\n",errno,strerror(errno));
+        return 0;
+    }
+    strcpy(dir,argv[1]);
+  }
+  else{
+    printf("please enter a directory\n");
+    return 0;
+  }
+
+  d = opendir(dir);
   entry = readdir(d);
 
   printf("Directories:\n");
@@ -26,7 +41,7 @@ int main(){
   }
   closedir(d);
 
-  d = opendir("./");
+  d = opendir(dir);
   printf("\nRegular Files:\n");
   entry = readdir(d);
   while (entry){
@@ -40,7 +55,7 @@ int main(){
   }
   closedir(d);
 
-  d = opendir("./");
+  d = opendir(dir);
   printf("\nOther files:\n");
   entry = readdir(d);
   while (entry){
